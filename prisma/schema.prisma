@@ -1,0 +1,72 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Navigation {
+  id            Int        @id @default(autoincrement())
+  title         String
+  slug          String     @unique
+  lastScrapedAt DateTime?
+  categories    Category[]
+}
+
+model Category {
+  id            Int       @id @default(autoincrement())
+  navigationId  Int
+  parentId      Int?
+  title         String
+  slug          String    @unique   // 👈 add this
+  productCount  Int       @default(0)
+  lastScrapedAt DateTime?
+
+  navigation    Navigation @relation(fields: [navigationId], references: [id])
+  parent        Category?  @relation("CategoryToSub", fields: [parentId], references: [id])
+  children      Category[] @relation("CategoryToSub")
+  products      Product[]
+}
+
+
+model Product {
+  id            Int       @id @default(autoincrement())
+  sourceId      String    @unique
+  title         String
+  author        String?
+  price         Float?
+  currency      String?
+  imageUrl      String?
+  sourceUrl     String    @unique
+  lastScrapedAt DateTime?
+
+  categoryId Int
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  detail  ProductDetail?
+  reviews Review[]
+}
+
+model ProductDetail {
+  id              Int       @id @default(autoincrement())
+  productId       Int       @unique
+  description     String
+  language        String?   // optional field
+  format          String?   // optional field
+  isbn            String
+  publicationDate DateTime
+  product         Product   @relation(fields: [productId], references: [id])
+}
+
+
+model Review {
+  id        Int     @id @default(autoincrement())
+  productId Int
+  rating    Float
+  // comment field missing
+  // user field missing
+  product   Product @relation(fields: [productId], references: [id])
+}
+
