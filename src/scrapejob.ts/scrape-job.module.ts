@@ -6,5 +6,6 @@ import { PrismaService } from '../prisma/prisma.service';
 @Module({
   controllers: [ScraperController],
   providers: [ScraperService, PrismaService],
+  exports: [ScraperService] // <-- Export ScraperService
 })
 export class ScraperModule {}
