@@ -5,13 +5,17 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: '*', // or '*' for all origins
+    origin: '*', // allow all origins
     credentials: true,
   });
 
   app.setGlobalPrefix('api');
-  const port = process.env.PORT ? parseInt(process.env.PORT) : 3001; // 👈 use 3001
-  await app.listen(port);
-  console.log(`✅ Backend running on http://localhost:${port}`);
+
+  const port = process.env.PORT ? parseInt(process.env.PORT) : 3001;
+
+  // ✅ Bind to 0.0.0.0 for Railway
+  await app.listen(port, '0.0.0.0');
+
+  console.log(`✅ Backend running on port ${port}`);
 }
 bootstrap();
