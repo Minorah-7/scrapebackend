@@ -14,8 +14,10 @@ export class NavigationController {
   }
 
   // Force scrape from WOB
-  @Post('scrape')
+ @Post('scrape')
   async scrapeNav() {
-    return this.navService.scrapeNavigation();
-  }
+  this.navService.scrapeNavigation().catch(err => console.error(err));
+  return { status: 'scraping started' };
+}
+
 }

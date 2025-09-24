@@ -15,7 +15,7 @@ export class ScraperService {
 
     const crawler = new PlaywrightCrawler({
       requestQueue,
-      maxConcurrency: 3, // adjust based on server resources
+      maxConcurrency: 1, // adjust based on server resources
       launchContext: {
         launchOptions: {
           headless: true,
