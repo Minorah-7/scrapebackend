@@ -12,12 +12,22 @@ const navigation_module_1 = require("./navigation/navigation.module");
 const category_module_1 = require("./category/category.module");
 const prisma_module_1 = require("./prisma/prisma.module");
 const scrape_job_module_1 = require("./scrapejob.ts/scrape-job.module");
+const product_controller_1 = require("./product/product.controller");
+const auth_module_1 = require("./auth/auth.module");
+const favourites_service_1 = require("./favourites/favourites.service");
+const favourites_controller_1 = require("./favourites/favourites.controller");
+const config_1 = require("@nestjs/config");
+const reviews_module_1 = require("./review/reviews.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [prisma_module_1.PrismaModule, navigation_module_1.NavigationModule, category_module_1.CategoryModule, scrape_job_module_1.ScraperModule],
+        imports: [config_1.ConfigModule.forRoot({
+                isGlobal: true,
+            }), prisma_module_1.PrismaModule, navigation_module_1.NavigationModule, category_module_1.CategoryModule, scrape_job_module_1.ScraperModule, auth_module_1.AuthModule, reviews_module_1.ReviewsModule],
+        controllers: [product_controller_1.ProductController, favourites_controller_1.FavouritesController],
+        providers: [favourites_service_1.FavouritesService],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

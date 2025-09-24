@@ -4,12 +4,13 @@ export declare class CategoryService {
     constructor(prisma: PrismaService);
     getCategoriesByNavigationSlug(slug: string): Promise<{
         id: number;
-        navigationId: number;
-        parentId: number | null;
         title: string;
         slug: string;
-        productCount: number;
+        url: string | null;
         lastScrapedAt: Date | null;
+        navigationId: number;
+        parentId: number | null;
+        productCount: number;
     }[]>;
     getProductsByCategoryId(categoryId: number, page?: number, limit?: number): Promise<{
         id: number;

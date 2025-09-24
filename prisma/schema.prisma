@@ -11,6 +11,7 @@ model Navigation {
   id            Int        @id @default(autoincrement())
   title         String
   slug          String     @unique
+  url           String?
   lastScrapedAt DateTime?
   categories    Category[]
 }
@@ -20,16 +21,16 @@ model Category {
   navigationId  Int
   parentId      Int?
   title         String
-  slug          String    @unique   // 👈 add this
+  slug          String    @unique // 👈 add this
+  url           String?
   productCount  Int       @default(0)
   lastScrapedAt DateTime?
 
-  navigation    Navigation @relation(fields: [navigationId], references: [id])
-  parent        Category?  @relation("CategoryToSub", fields: [parentId], references: [id])
-  children      Category[] @relation("CategoryToSub")
-  products      Product[]
+  navigation Navigation @relation(fields: [navigationId], references: [id])
+  parent     Category?  @relation("CategoryToSub", fields: [parentId], references: [id])
+  children   Category[] @relation("CategoryToSub")
+  products   Product[]
 }
-
 
 model Product {
   id            Int       @id @default(autoincrement())
@@ -45,28 +46,56 @@ model Product {
   categoryId Int
   category   Category @relation(fields: [categoryId], references: [id])
 
-  detail  ProductDetail?
-  reviews Review[]
+  detail     ProductDetail?
+  reviews    Review[]
+  favourites Favourite[] // 👈 add this line
 }
 
 model ProductDetail {
-  id              Int       @id @default(autoincrement())
-  productId       Int       @unique
+  id              Int      @id @default(autoincrement())
+  productId       Int      @unique
   description     String
-  language        String?   // optional field
-  format          String?   // optional field
+  language        String? // optional field
+  format          String? // optional field
   isbn            String
   publicationDate DateTime
-  product         Product   @relation(fields: [productId], references: [id])
+  product         Product  @relation(fields: [productId], references: [id])
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  reviews    Review[]
+  favourites Favourite[]
+}
+
+model Favourite {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  productId Int
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+
+  @@unique([userId, productId]) // 👈 add this line
 }
 
 
 model Review {
-  id        Int     @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
+  rating    Int
+  comment   String?
   productId Int
-  rating    Float
-  // comment field missing
-  // user field missing
-  product   Product @relation(fields: [productId], references: [id])
+  userId    Int
+  createdAt DateTime @default(now())
+
+  product   Product  @relation(fields: [productId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 }
 

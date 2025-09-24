@@ -6,6 +6,8 @@ export declare class NavigationController {
         id: number;
         title: string;
         slug: string;
+        url: string | null;
         lastScrapedAt: Date | null;
     }[]>;
+    scrapeNav(): Promise<void>;
 }

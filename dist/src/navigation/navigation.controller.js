@@ -19,6 +19,9 @@ let NavigationController = class NavigationController {
     async getAll() {
         return this.navService.getAll();
     }
+    async scrapeNav() {
+        return this.navService.scrapeNavigation();
+    }
 };
 exports.NavigationController = NavigationController;
 __decorate([
@@ -27,6 +30,12 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], NavigationController.prototype, "getAll", null);
+__decorate([
+    (0, common_1.Post)('scrape'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], NavigationController.prototype, "scrapeNav", null);
 exports.NavigationController = NavigationController = __decorate([
     (0, common_1.Controller)('navigation'),
     __metadata("design:paramtypes", [navigation_service_1.NavigationService])

@@ -27,15 +27,6 @@ let CategoryController = class CategoryController {
     async getProducts(id, page = '1', limit = '10') {
         return this.categoryService.getProductsByCategoryId(parseInt(id, 10), parseInt(page, 10), parseInt(limit, 10));
     }
-    async getProduct(id) {
-        return this.prisma.product.findUnique({
-            where: { id: parseInt(id, 10) },
-            include: {
-                detail: true,
-                reviews: true,
-            },
-        });
-    }
 };
 exports.CategoryController = CategoryController;
 __decorate([
@@ -54,13 +45,6 @@ __decorate([
     __metadata("design:paramtypes", [String, Object, Object]),
     __metadata("design:returntype", Promise)
 ], CategoryController.prototype, "getProducts", null);
-__decorate([
-    (0, common_1.Get)('products/:id'),
-    __param(0, (0, common_1.Param)('id')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], CategoryController.prototype, "getProduct", null);
 exports.CategoryController = CategoryController = __decorate([
     (0, common_1.Controller)(),
     __metadata("design:paramtypes", [category_service_1.CategoryService,

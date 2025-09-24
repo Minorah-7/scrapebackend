@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
 import { NavigationService } from './navigation.service';
 
 @Controller('navigation')
@@ -9,4 +9,11 @@ export class NavigationController {
   async getAll() {
     return this.navService.getAll();
   }
+
+  @Post('scrape')
+  async scrapeNav() {
+    return this.navService.scrapeNavigation();
+  }
+
+  
 }

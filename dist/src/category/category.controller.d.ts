@@ -6,12 +6,13 @@ export declare class CategoryController {
     constructor(categoryService: CategoryService, prisma: PrismaService);
     getCategories(slug: string): Promise<{
         id: number;
-        navigationId: number;
-        parentId: number | null;
         title: string;
         slug: string;
-        productCount: number;
+        url: string | null;
         lastScrapedAt: Date | null;
+        navigationId: number;
+        parentId: number | null;
+        productCount: number;
     }[]>;
     getProducts(id: string, page?: string, limit?: string): Promise<{
         id: number;
@@ -25,31 +26,4 @@ export declare class CategoryController {
         sourceUrl: string;
         categoryId: number;
     }[]>;
-    getProduct(id: string): Promise<{
-        detail: {
-            id: number;
-            productId: number;
-            description: string;
-            language: string | null;
-            format: string | null;
-            isbn: string;
-            publicationDate: Date;
-        };
-        reviews: {
-            id: number;
-            productId: number;
-            rating: number;
-        }[];
-    } & {
-        id: number;
-        title: string;
-        lastScrapedAt: Date | null;
-        sourceId: string;
-        author: string | null;
-        price: number | null;
-        currency: string | null;
-        imageUrl: string | null;
-        sourceUrl: string;
-        categoryId: number;
-    }>;
 }

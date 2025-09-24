@@ -28,15 +28,6 @@ export class CategoryController {
     );
   }
 
-  @Get('products/:id')
-  async getProduct(@Param('id') id: string) {
-    return this.prisma.product.findUnique({
-      where: { id: parseInt(id, 10) },
-      include: {
-        detail: true,
-        reviews: true,
-      },
-    });
-  }
+  
   
 }
