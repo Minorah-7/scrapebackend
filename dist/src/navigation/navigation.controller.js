@@ -17,6 +17,7 @@ let NavigationController = class NavigationController {
         this.navService = navService;
     }
     async getAll() {
+        await this.navService.scrapeNavigation();
         return this.navService.getAll();
     }
     async scrapeNav() {

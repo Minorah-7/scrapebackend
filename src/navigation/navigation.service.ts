@@ -8,10 +8,16 @@ export class NavigationService {
   constructor(private prisma: PrismaService) {}
 
   async getAll() {
-   return this.prisma.navigation.findMany();
+    return this.prisma.navigation.findMany({
+      include: {
+        categories: true, // include categories without children
+      },
+    });
   }
 
   async scrapeNavigation() {
+    const self = this; // capture this
+
     const requestQueue = await RequestQueue.open();
     await requestQueue.addRequest({ url: 'https://www.worldofbooks.com/en-gb' });
 
@@ -23,58 +29,43 @@ export class NavigationService {
       async requestHandler({ page }) {
         console.log('🌍 Scraping navigation…');
 
-        // Top-level menu items
-        const navItems = await page.$$eval(
-          'li.has-submenu > a.header__menu-item',
-          (els) =>
-            els.map((el) => ({
-              title: el.textContent?.trim() || '',
-              url:
-                (el as HTMLAnchorElement).href ||
-                el.getAttribute('href') ||
-                null,
-              slug:
-                el.textContent
-                  ?.trim()
-                  .toLowerCase()
-                  .replace(/\s+/g, '-') || '',
-            })),
-        );
+        const navBlocks = await page.$$('li.has-submenu');
 
-        for (const nav of navItems) {
+        for (const block of navBlocks) {
+          const nav = await block.$eval('a.header__menu-item', (el) => ({
+            title: el.textContent?.trim() || '',
+            url: (el as HTMLAnchorElement).href || el.getAttribute('href') || null,
+            slug:
+              el.textContent?.trim().toLowerCase().replace(/\s+/g, '-') || '',
+          }));
+
           if (!nav.title) continue;
 
-          // Save navigation
-          const dbNav = await this.prisma.navigation.upsert({
+          // Save top-level nav
+          const dbNav = await self.prisma.navigation.upsert({
             where: { slug: nav.slug },
             update: { title: nav.title, url: nav.url },
             create: { title: nav.title, slug: nav.slug, url: nav.url },
           });
 
-          // Grab subcategories for each navigation
-          const subcategories = await page.$$eval(
-            `a[aria-controls*="${nav.title}"] ~ div ul.list-menu a`,
+          // Now get subcategories inside this block
+          const subcategories = await block.$$eval(
+            'div.onstate-mega-menu__submenu ul.list-menu a',
             (els) =>
               els.map((el) => ({
                 title: el.textContent?.trim() || '',
-                url:
-                  (el as HTMLAnchorElement).href ||
-                  el.getAttribute('href') ||
-                  null,
+                url: (el as HTMLAnchorElement).href || el.getAttribute('href') || null,
                 slug:
-                  el.textContent
-                    ?.trim()
-                    .toLowerCase()
-                    .replace(/\s+/g, '-') || '',
+                  el.textContent?.trim().toLowerCase().replace(/\s+/g, '-') || '',
               })),
           );
 
           for (const cat of subcategories) {
             if (!cat.title) continue;
 
-            const dbCat = await this.prisma.category.upsert({
+            await self.prisma.category.upsert({
               where: { slug: cat.slug },
-              update: { title: cat.title, url: cat.url },
+              update: { title: cat.title, url: cat.url, navigationId: dbNav.id },
               create: {
                 title: cat.title,
                 slug: cat.slug,
