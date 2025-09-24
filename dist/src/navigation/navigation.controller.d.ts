@@ -4,21 +4,21 @@ export declare class NavigationController {
     constructor(navService: NavigationService);
     getAll(): Promise<({
         categories: {
-            id: number;
             title: string;
             slug: string;
             url: string | null;
             lastScrapedAt: Date | null;
+            id: number;
             navigationId: number;
             parentId: number | null;
             productCount: number;
         }[];
     } & {
-        id: number;
         title: string;
         slug: string;
         url: string | null;
         lastScrapedAt: Date | null;
+        id: number;
     })[]>;
     scrapeNav(): Promise<void>;
 }

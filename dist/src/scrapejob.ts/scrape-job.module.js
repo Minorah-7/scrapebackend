@@ -18,6 +18,7 @@ exports.ScraperModule = ScraperModule = __decorate([
     (0, common_1.Module)({
         controllers: [scrape_controller_1.ScraperController],
         providers: [scrape_job_service_1.ScraperService, prisma_service_1.PrismaService],
+        exports: [scrape_job_service_1.ScraperService]
     })
 ], ScraperModule);
 //# sourceMappingURL=scrape-job.module.js.map

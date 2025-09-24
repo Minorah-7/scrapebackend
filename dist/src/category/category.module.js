@@ -11,11 +11,13 @@ const common_1 = require("@nestjs/common");
 const category_service_1 = require("./category.service");
 const category_controller_1 = require("./category.controller");
 const prisma_service_1 = require("../prisma/prisma.service");
+const scrape_job_module_1 = require("../scrapejob.ts/scrape-job.module");
 let CategoryModule = class CategoryModule {
 };
 exports.CategoryModule = CategoryModule;
 exports.CategoryModule = CategoryModule = __decorate([
     (0, common_1.Module)({
+        imports: [scrape_job_module_1.ScraperModule],
         controllers: [category_controller_1.CategoryController],
         providers: [category_service_1.CategoryService, prisma_service_1.PrismaService],
     })
