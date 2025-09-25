@@ -21,7 +21,8 @@ let NavigationController = class NavigationController {
         return this.navService.getAll();
     }
     async scrapeNav() {
-        return this.navService.scrapeNavigation();
+        this.navService.scrapeNavigation().catch(err => console.error(err));
+        return { status: 'scraping started' };
     }
 };
 exports.NavigationController = NavigationController;

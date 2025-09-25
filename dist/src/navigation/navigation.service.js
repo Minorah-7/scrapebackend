@@ -28,6 +28,10 @@ let NavigationService = class NavigationService {
         const self = this;
         const requestQueue = await playwright_1.RequestQueue.open();
         await requestQueue.addRequest({ url: 'https://www.worldofbooks.com/en-gb' });
+        if (process.env.NODE_ENV === 'production') {
+            console.warn(`⚠️ Skipping actual scraping on Railway for category navigation.`);
+            return [];
+        }
         const crawler = new playwright_1.PlaywrightCrawler({
             requestQueue,
             launchContext: {
